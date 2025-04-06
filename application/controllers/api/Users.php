@@ -120,6 +120,54 @@ class Users extends RestController {
     
         $this->response(["message" => "OTP verified successfully. Account activated."], 200);
     }
+
+    // 📌 Login using username/email and password (only if verified)
+public function login_post() {
+    $input = json_decode(file_get_contents("php://input"), true);
+
+    if (!isset($input['identifier']) || !isset($input['password'])) {
+        $this->response(["error" => "Username/Email and Password are required"], 400);
+        return;
+    }
+
+    $identifier = $input['identifier'];
+    $password = $input['password'];
+
+    // Search by username or email
+    $this->db->where('username', $identifier);
+    $this->db->or_where('email', $identifier);
+    $query = $this->db->get('users');
+
+    if ($query->num_rows() === 0) {
+        $this->response(["error" => "User not found"], 404);
+        return;
+    }
+
+    $user = $query->row();
+
+    // Verify password
+    if (!password_verify($password, $user->password)) {
+        $this->response(["error" => "Incorrect password"], 401);
+        return;
+    }
+
+    // Check if verified
+    if ((int)$user->is_verified !== 1) {
+        $this->response(["error" => "Account not verified. Please verify OTP first."], 403);
+        return;
+    }
+
+    // Successful login
+    $this->response([
+        "message" => "Login successful",
+        "user" => [
+            "id" => $user->id,
+            "username" => $user->username,
+            "email" => $user->email
+        ]
+    ], 200);
+}
+
     
 
     public function resend_otp_post() {
