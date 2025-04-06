@@ -80,3 +80,14 @@ $route['api/freelancer']['POST'] = 'api/freelancer/index_post';
 
 $route['api/mentor']['GET'] = 'api/mentor/index_get';
 $route['api/mentor']['POST'] = 'api/mentor/index_post';
+
+
+$route['api/hr']['GET'] = 'api/hr/index_get';
+$route['api/hr']['POST'] = 'api/hr/index_post';
+
+
+$route['api/incubation']['GET'] = 'api/incubation/index_get';
+$route['api/incubation']['POST'] = 'api/incubation/index_post';
+
+$route['api/legal']['GET'] = 'api/legal/index_get';
+$route['api/legal']['POST'] = 'api/legal/index_post';
