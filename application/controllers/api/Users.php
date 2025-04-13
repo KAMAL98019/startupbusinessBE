@@ -22,15 +22,22 @@ class Users extends RestController {
     public function index_post() {
         $input = json_decode(file_get_contents("php://input"), true);
     
-        if (!isset($input['username']) || !isset($input['email']) || !isset($input['password'])) {
-            $this->response(["error" => "Username, Email, and Password are required"], 400);
+        if (!isset($input['username']) || trim($input['username']) === "") {
+            $this->response(["success" => false, "message" => "Username is required"], 400);
+            return;
+        } elseif (!isset($input['email']) || trim($input['email']) === "") {
+            $this->response(["success" => false, "message" => "Email is required"], 400);
+            return;
+        } elseif (!isset($input['password']) || trim($input['password']) === "") {
+            $this->response(["success" => false, "message" => "Password is required"], 400);
             return;
         }
+        
     
         // Check if email already exists
         $query = $this->db->get_where("users", ["email" => $input['email']]);
         if ($query->num_rows() > 0) {
-            $this->response(["error" => "Email already registered"], 400);
+            $this->response(["success"=>false,"message" => "Email already registered"], 400);
             return;
         }
     
@@ -77,9 +84,9 @@ class Users extends RestController {
             <p>This code is valid for 5 minutes.</p>");
     
         if ($this->email->send()) {
-            $this->response(["message" => "User registered successfully. OTP sent to email."], 201);
+            $this->response(["success"=>true,"message" => "User registered successfully. OTP sent to email."], 201);
         } else {
-            $this->response(["error" => "Failed to send OTP email."], 500);
+            $this->response(["success"=>false,"message" => "Failed to send OTP email."], 500);
         }
     }
     
@@ -89,14 +96,14 @@ class Users extends RestController {
         $input = json_decode(file_get_contents("php://input"), true);
     
         if (!isset($input['email']) || !isset($input['otp'])) {
-            $this->response(["error" => "Email and OTP are required"], 400);
+            $this->response(["success"=>false,"message" => "Email and OTP are required"], 400);
             return;
         }
     
         // Check if user exists
         $query = $this->db->get_where("users", ["email" => $input['email']]);
         if ($query->num_rows() == 0) {
-            $this->response(["error" => "Email not registered"], 400);
+            $this->response(["success"=>false,"message" => "Email not registered"], 400);
             return;
         }
     
@@ -104,13 +111,13 @@ class Users extends RestController {
     
         // Check if OTP is valid (Convert both to string)
         if (strval($user->otp) !== strval($input['otp'])) {
-            $this->response(["error" => "Invalid OTP"], 400);
+            $this->response(["success"=>false,"message" => "Invalid OTP"], 400);
             return;
         }
     
         // Check if OTP is expired
         if (strtotime($user->otp_expiry) < time()) {
-            $this->response(["error" => "OTP expired"], 400);
+            $this->response(["success"=>false,"message" => "OTP expired"], 400);
             return;
         }
     
@@ -118,7 +125,7 @@ class Users extends RestController {
         $this->db->where("email", $input['email']);
         $this->db->update("users", ["otp" => NULL, "otp_expiry" => NULL, "is_verified" => 1]);
     
-        $this->response(["message" => "OTP verified successfully. Account activated."], 200);
+        $this->response(["success"=>true,"message" => "OTP verified successfully. Account activated."], 200);
     }
 
     // 📌 Login using username/email and password (only if verified)
@@ -126,7 +133,7 @@ public function login_post() {
     $input = json_decode(file_get_contents("php://input"), true);
 
     if (!isset($input['identifier']) || !isset($input['password'])) {
-        $this->response(["error" => "Username/Email and Password are required"], 400);
+        $this->response(["success"=>false,"message" => "Username/Email and Password are required"], 400);
         return;
     }
 
@@ -139,7 +146,7 @@ public function login_post() {
     $query = $this->db->get('users');
 
     if ($query->num_rows() === 0) {
-        $this->response(["error" => "User not found"], 404);
+        $this->response(["success"=>false,"message" => "User not found"], 404);
         return;
     }
 
@@ -147,18 +154,18 @@ public function login_post() {
 
     // Verify password
     if (!password_verify($password, $user->password)) {
-        $this->response(["error" => "Incorrect password"], 401);
+        $this->response(["success"=>false,"message" => "Incorrect password"], 401);
         return;
     }
 
     // Check if verified
     if ((int)$user->is_verified !== 1) {
-        $this->response(["error" => "Account not verified. Please verify OTP first."], 403);
+        $this->response(["success"=>false,"message" => "Account not verified. Please verify OTP first."], 403);
         return;
     }
 
     // Successful login
-    $this->response([
+    $this->response(["success"=>true,
         "message" => "Login successful",
         "user" => [
             "id" => $user->id,
@@ -174,14 +181,14 @@ public function login_post() {
         $input = json_decode(file_get_contents("php://input"), true);
     
         if (!isset($input['email'])) {
-            $this->response(["error" => "Email is required"], 400);
+            $this->response(["success"=>false,"message" => "Email is required"], 400);
             return;
         }
     
         // Check if user exists
         $query = $this->db->get_where("users", ["email" => $input['email']]);
         if ($query->num_rows() == 0) {
-            $this->response(["error" => "Email not registered"], 400);
+            $this->response(["success"=>false,"message" => "Email not registered"], 400);
             return;
         }
     
@@ -220,9 +227,9 @@ public function login_post() {
             <p>This code will expire in 5 minutes.</p>");
     
         if ($this->email->send()) {
-            $this->response(["message" => "New OTP sent to your email successfully."], 200);
+            $this->response(["success"=>true,"message" => "New OTP sent to your email successfully."], 200);
         } else {
-            $this->response(["error" => "Failed to send OTP email."], 500);
+            $this->response(["success"=>false,"message" => "Failed to send OTP email."], 500);
         }
     }
     
