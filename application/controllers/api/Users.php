@@ -128,52 +128,98 @@ class Users extends RestController {
         $this->response(["success"=>true,"message" => "OTP verified successfully. Account activated."], 200);
     }
 
+    public function login_post() {
+        $input = json_decode(file_get_contents("php://input"), true);
+    
+        // Validate inputs
+        if (!isset($input['email']) || trim($input['email']) === "") {
+            $this->response(["success" => false, "message" => "Email is required"], 400);
+            return;
+        } elseif (!isset($input['password']) || trim($input['password']) === "") {
+            $this->response(["success" => false, "message" => "Password is required"], 400);
+            return;
+        }
+    
+        // Fetch user by email
+        $query = $this->db->get_where("users", ["email" => $input['email']]);
+        if ($query->num_rows() === 0) {
+            $this->response(["success" => false, "message" => "Invalid email or password"], 401);
+            return;
+        }
+    
+        $user = $query->row_array();
+    
+        // Check if user is verified
+        if ((int)$user['is_verified'] !== 1) {
+            $this->response(["success" => false, "message" => "Account not verified. Please verify your OTP."], 403);
+            return;
+        }
+    
+        // Verify password
+        if (!password_verify($input['password'], $user['password'])) {
+            $this->response(["success" => false, "message" => "Invalid email or password"], 401);
+            return;
+        }
+    
+        // Login success
+        $this->response([
+            "success" => true,
+            "message" => "Login successful",
+            "user" => [
+                "id" => $user['id'],
+                "username" => $user['username'],
+                "email" => $user['email']
+            ]
+        ], 200);
+    }
+    
+
     // 📌 Login using username/email and password (only if verified)
-public function login_post() {
-    $input = json_decode(file_get_contents("php://input"), true);
+// public function login_post() {
+//     $input = json_decode(file_get_contents("php://input"), true);
 
-    if (!isset($input['identifier']) || !isset($input['password'])) {
-        $this->response(["success"=>false,"message" => "Username/Email and Password are required"], 400);
-        return;
-    }
+//     if (!isset($input['identifier']) || !isset($input['password'])) {
+//         $this->response(["success"=>false,"message" => "Username/Email and Password are required"], 400);
+//         return;
+//     }
 
-    $identifier = $input['identifier'];
-    $password = $input['password'];
+//     $identifier = $input['identifier'];
+//     $password = $input['password'];
 
-    // Search by username or email
-    $this->db->where('username', $identifier);
-    $this->db->or_where('email', $identifier);
-    $query = $this->db->get('users');
+//     // Search by username or email
+//     $this->db->where('username', $identifier);
+//     $this->db->or_where('email', $identifier);
+//     $query = $this->db->get('users');
 
-    if ($query->num_rows() === 0) {
-        $this->response(["success"=>false,"message" => "User not found"], 404);
-        return;
-    }
+//     if ($query->num_rows() === 0) {
+//         $this->response(["success"=>false,"message" => "User not found"], 404);
+//         return;
+//     }
 
-    $user = $query->row();
+//     $user = $query->row();
 
-    // Verify password
-    if (!password_verify($password, $user->password)) {
-        $this->response(["success"=>false,"message" => "Incorrect password"], 401);
-        return;
-    }
+//     // Verify password
+//     if (!password_verify($password, $user->password)) {
+//         $this->response(["success"=>false,"message" => "Incorrect password"], 401);
+//         return;
+//     }
 
-    // Check if verified
-    if ((int)$user->is_verified !== 1) {
-        $this->response(["success"=>false,"message" => "Account not verified. Please verify OTP first."], 403);
-        return;
-    }
+//     // Check if verified
+//     if ((int)$user->is_verified !== 1) {
+//         $this->response(["success"=>false,"message" => "Account not verified. Please verify OTP first."], 403);
+//         return;
+//     }
 
-    // Successful login
-    $this->response(["success"=>true,
-        "message" => "Login successful",
-        "user" => [
-            "id" => $user->id,
-            "username" => $user->username,
-            "email" => $user->email
-        ]
-    ], 200);
-}
+//     // Successful login
+//     $this->response(["success"=>true,
+//         "message" => "Login successful",
+//         "user" => [
+//             "id" => $user->id,
+//             "username" => $user->username,
+//             "email" => $user->email
+//         ]
+//     ], 200);
+// }
 
     
 

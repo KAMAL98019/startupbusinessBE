@@ -59,7 +59,7 @@ $route['user-types/(:num)']['PUT'] = 'api/UserTypes/index_put/$1';
 $route['user-types/(:num)']['DELETE'] = 'api/UserTypes/index_delete/$1';
 
 
-$route['api/users/login']['POST'] = 'api/users/login_post';
+$route['api/login']['post'] = 'api/login/login';
 $route['api/users/getusers']['GET'] = 'api/Users/index_get';  // Get all users
 $route['api/users/register']['POST'] = 'api/Users/index_post';  // Register user (with auto OTP)
 $route['api/users/verify-otp']['POST'] = 'api/Users/verify_otp_post';  // Verify OTP
