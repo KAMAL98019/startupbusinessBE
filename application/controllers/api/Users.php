@@ -26,7 +26,8 @@ class Users extends RestController
     public function index_post()
     {
         $input = json_decode(file_get_contents("php://input"), true);
-
+    
+        // Input validation
         if (!isset($input['username']) || trim($input['username']) === "") {
             $this->response(["success" => false, "message" => "Username is required"], 400);
             return;
@@ -37,67 +38,71 @@ class Users extends RestController
             $this->response(["success" => false, "message" => "Password is required"], 400);
             return;
         }
-
-
-        // Check if email already exists
+    
+        // Check for existing email
         $query = $this->db->get_where("users", ["email" => $input['email']]);
         if ($query->num_rows() > 0) {
             $this->response(["success" => false, "message" => "Email already registered"], 400);
             return;
         }
-
+    
         // Generate OTP
         $otp = rand(100000, 999999);
         $otp_expiry = date("Y-m-d H:i:s", strtotime("+5 minutes")); // OTP valid for 5 minutes
-
+    
         // Hash the password
         $hashed_password = password_hash($input['password'], PASSWORD_BCRYPT);
-
-        // Insert user data
+    
+        // Insert user
         $data = [
-            "username" => $input['username'],
-            "email" => $input['email'],
-            "password" => $hashed_password,
-            "otp" => $otp,
-            "otp_expiry" => $otp_expiry,
+            "username"    => $input['username'],
+            "email"       => $input['email'],
+            "password"    => $hashed_password,
+            "otp"         => $otp,
+            "otp_expiry"  => $otp_expiry,
             "is_verified" => 0
         ];
         $this->db->insert("users", $data);
-
-        // Load email library and configure
+    
+        // Load email library
         $this->load->library('email');
-
+    
+        // Email config
         $config = [
             'protocol'    => 'smtp',
             'smtp_host'   => 'smtp.gmail.com',
             'smtp_port'   => 587,
             'smtp_user'   => 'ashekm2003@gmail.com',
-            'smtp_pass'   => 'mwdo xzrv lovj kppr', // Replace with app password
-            'smtp_crypto' => 'tls',                    // Required for Gmail over port 587
+            'smtp_pass'   => 'mwdo xzrv lovj kppr', // App-specific password
+            'smtp_crypto' => 'tls',
             'mailtype'    => 'html',
             'charset'     => 'utf-8',
             'newline'     => "\r\n"
         ];
         $this->email->initialize($config);
-
-        // Compose the email
+    
+        // Compose email
         $this->email->from('ashekm2003@gmail.com', 'Event App');
         $this->email->to($input['email']);
         $this->email->subject('Your OTP Code');
-        $this->email->message("<p>Hello <strong>{$input['username']}</strong>,</p>
+        $this->email->message("
+            <p>Hello <strong>{$input['username']}</strong>,</p>
             <p>Your OTP code is: <strong>$otp</strong></p>
-            <p>This code is valid for 5 minutes.</p>");
-
+            <p>This code is valid for 5 minutes.</p>
+        ");
+    
+        // Send email
         if ($this->email->send()) {
-            $this->db->select("email");
-            $query = $this->db->get("users");
-            $fetchemail = $query->result();
-            $this->response(["success" => true, "message" => "User registered successfully. OTP sent to email.","data"=>$fetchemail], 201);
+            $this->response([
+                "success" => true,
+                "message" => "User registered successfully. OTP sent to email.",
+                "data"    => ["email" => $input['email']]
+            ], 201);
         } else {
             $this->response(["success" => false, "message" => "Failed to send OTP email."], 500);
         }
     }
-
+    
 
     // 📌 Verify OTP
     public function verify_otp_post()
