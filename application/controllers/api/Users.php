@@ -284,9 +284,76 @@ class Users extends RestController
         $this->email->from('ashekm2003@gmail.com', 'Event App');
         $this->email->to($input['email']);
         $this->email->subject('Your New OTP Code');
-        $this->email->message("<p>Hello <strong>{$user->username}</strong>,</p>
-            <p>Your new OTP code is: <strong>$otp</strong></p>
-            <p>This code will expire in 5 minutes.</p>");
+        $this->email->message("
+  <html>
+  <head>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f4;
+        margin: 0;
+        padding: 0;
+      }
+      .container {
+        max-width: 600px;
+        margin: 30px auto;
+        background-color: #ffffff;
+        padding: 30px;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      }
+      .header {
+        text-align: center;
+        padding-bottom: 20px;
+        border-bottom: 1px solid #e0e0e0;
+      }
+      .header h2 {
+        margin: 0;
+        color: #333333;
+      }
+      .content {
+        padding: 20px 0;
+        font-size: 16px;
+        line-height: 1.6;
+        color: #555555;
+      }
+      .otp-box {
+        display: inline-block;
+        padding: 12px 20px;
+        font-size: 24px;
+        font-weight: bold;
+        color: #ffffff;
+        background-color: #4CAF50;
+        border-radius: 6px;
+        margin: 10px 0;
+      }
+      .footer {
+        text-align: center;
+        font-size: 14px;
+        color: #999999;
+        margin-top: 30px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class='container'>
+      <div class='header'>
+        <h2>OTP Verification</h2>
+      </div>
+      <div class='content'>
+        <p>Hello <strong>{$user->username}</strong>,</p>
+        <p>Your new OTP code is:</p>
+        <div class='otp-box'>$otp</div>
+        <p>Please use this code to complete your verification process. This code will expire in <strong>5 minutes</strong>.</p>
+      </div>
+      <div class='footer'>
+        <p>If you did not request this, please ignore this message.</p>
+      </div>
+    </div>
+  </body>
+  </html>
+");
+
 
         if ($this->email->send()) {
             $this->response(["success" => true, "message" => "New OTP sent to your email successfully."], 200);
