@@ -94,5 +94,9 @@ $route['api/incubation']['POST'] = 'api/incubation/index_post';
 $route['api/legal']['GET'] = 'api/legal/index_get';
 $route['api/legal']['POST'] = 'api/legal/index_post';
 
+$route['api/auth/forgot_password']['post'] = 'api/auth/forgot_password';
+$route['api/auth/verify_otp']['post']      = 'api/auth/verify_otp';
+$route['api/auth/reset_password']['post']  = 'api/auth/reset_password';
+
 
 
