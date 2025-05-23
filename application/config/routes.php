@@ -99,4 +99,7 @@ $route['api/auth/verify_otp']['post']      = 'api/auth/verify_otp';
 $route['api/auth/reset_password']['post']  = 'api/auth/reset_password';
 
 
+$route['api/get_profiles']['GET'] = 'api/get_profiles';              // Get all profiles
+$route['api/get_profiles/(:num)']['GET'] = 'api/get_profiles/$1';    // Get profile by ID
 
+$route['api/create_profile']['POST'] = 'api/create_profile';
