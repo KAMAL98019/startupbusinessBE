@@ -98,8 +98,8 @@ $route['api/auth/forgot_password']['post'] = 'api/auth/forgot_password';
 $route['api/auth/verify_otp']['post']      = 'api/auth/verify_otp';
 $route['api/auth/reset_password']['post']  = 'api/auth/reset_password';
 
+$route['profile']['post'] = 'ProfileApi/create_profile';
+$route['profile/(:num)']['get'] = 'ProfileApi/get_profile/$1';
+$route['profile']['get'] = 'ProfileApi/get_profile';
+$route['profile/(:num)']['put'] = 'ProfileApi/update_profile/$1';
 
-$route['api/get_profiles']['GET'] = 'api/get_profiles';              // Get all profiles
-$route['api/get_profiles/(:num)']['GET'] = 'api/get_profiles/$1';    // Get profile by ID
-
-$route['api/create_profile']['POST'] = 'api/create_profile';

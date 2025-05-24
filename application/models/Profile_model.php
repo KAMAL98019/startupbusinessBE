@@ -1,26 +1,21 @@
 <?php
 class Profile_model extends CI_Model {
 
-    public function get_profiles($id = null) {
-        if ($id) {
-            $this->db->where('id', $id);
-        }
-        $query = $this->db->get('profile_details');
-        $result = $query->result_array();
+    private $table = 'profile_details';
 
-        // Decode skills JSON
-        foreach ($result as &$row) {
-            $row['skills'] = json_decode($row['skills']);
-        }
-
-        return $result;
+    public function insert_profile($data) {
+        return $this->db->insert($this->table, $data);
     }
 
-    public function create_profile($data) {
-        // Encode skills array to JSON
-        if (isset($data['skills']) && is_array($data['skills'])) {
-            $data['skills'] = json_encode($data['skills']);
+    public function get_profiles($id = null) {
+        if ($id) {
+            return $this->db->get_where($this->table, ['id' => $id])->row_array();
         }
-        return $this->db->insert('profile_details', $data);
+        return $this->db->get($this->table)->result_array();
+    }
+
+    public function update_profile($id, $data) {
+        $this->db->where('id', $id);
+        return $this->db->update($this->table, $data);
     }
 }
