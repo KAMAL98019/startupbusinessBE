@@ -97,6 +97,7 @@ $route['api/legal']['POST'] = 'api/legal/index_post';
 $route['api/auth/forgot_password']['post'] = 'api/auth/forgot_password';
 $route['api/auth/verify_otp']['post']      = 'api/auth/verify_otp';
 $route['api/auth/reset_password']['post']  = 'api/auth/reset_password';
+$route['api/auth/resend_otp']['post'] = 'api/auth/resend_otp';
 
 $route['profile']['post'] = 'ProfileApi/create_profile';
 $route['profile/(:num)']['get'] = 'ProfileApi/get_profile/$1';
