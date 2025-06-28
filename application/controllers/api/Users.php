@@ -16,12 +16,12 @@ class Users extends RestController
 
     // 📌 Get all users (excluding OTP and passwords)
     public function index_get()
-    {
-        $this->db->select("id, username, email, is_verified, created_at");
-        $query = $this->db->get("users");
-        $data = $query->result();
-        $this->response($data, 200);
-    }
+{
+    $this->db->select("id, username, email, is_verified, created_at, role_id, role_name");
+    $query = $this->db->get("users");
+    $data = $query->result();
+    $this->response($data, 200);
+}
 
     public function index_post()
     {
@@ -52,16 +52,21 @@ class Users extends RestController
     
         // Hash the password
         $hashed_password = password_hash($input['password'], PASSWORD_BCRYPT);
-    
+        $role_id = isset($input['role_id']) ? (int)$input['role_id'] : 1;
+$role_name = isset($input['role_name']) ? trim($input['role_name']) : 'User';
+
         // Insert user
         $data = [
-            "username"    => $input['username'],
-            "email"       => $input['email'],
-            "password"    => $hashed_password,
-            "otp"         => $otp,
-            "otp_expiry"  => $otp_expiry,
-            "is_verified" => 0
-        ];
+          "username"    => $input['username'],
+          "email"       => $input['email'],
+          "password"    => $hashed_password,
+          "otp"         => $otp,
+          "otp_expiry"  => $otp_expiry,
+          "is_verified" => 0,
+          "role_id"     => $role_id,
+          "role_name"   => $role_name
+      ];
+      
         $this->db->insert("users", $data);
     
         // Load email library
@@ -361,4 +366,59 @@ class Users extends RestController
             $this->response(["success" => false, "message" => "Failed to send OTP email."], 500);
         }
     }
+
+
+    public function update_user_put($id)
+  {
+    $input = json_decode(file_get_contents("php://input"), true);
+
+    // Validate ID
+    if (!$id || !is_numeric($id)) {
+        $this->response(["success" => false, "message" => "Invalid user ID"], 400);
+        return;
+    }
+
+    // Check user exists
+    $user = $this->db->get_where("users", ["id" => $id])->row();
+    if (!$user) {
+        $this->response(["success" => false, "message" => "User not found"], 404);
+        return;
+    }
+
+    // Allowed fields
+    $allowed_fields = ['username', 'email', 'password', 'is_verified', 'role_id', 'role_name'];
+    $update_data = [];
+
+    // Loop through all received keys and update if allowed
+    foreach ($input as $key => $value) {
+        if (in_array($key, $allowed_fields)) {
+            if ($key === 'password') {
+                $value = password_hash($value, PASSWORD_BCRYPT);
+            } elseif ($key === 'is_verified' || $key === 'role_id') {
+                $value = (int)$value;
+            } else {
+                $value = trim($value);
+            }
+
+            $update_data[$key] = $value;
+        } else {
+            $this->response(["success" => false, "message" => "Invalid field: $key"], 400);
+            return;
+        }
+    }
+
+    if (empty($update_data)) {
+        $this->response(["success" => false, "message" => "No valid data to update"], 400);
+        return;
+    }
+
+    // Update DB
+    $this->db->where("id", $id);
+    if ($this->db->update("users", $update_data)) {
+        $this->response(["success" => true, "message" => "User updated successfully"], 200);
+    } else {
+        $this->response(["success" => false, "message" => "Failed to update user"], 500);
+    }
+}
+
 }

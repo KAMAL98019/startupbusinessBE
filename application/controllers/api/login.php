@@ -16,6 +16,7 @@ class Login extends RestController {
     public function login_post()
     {
         $input = json_decode(file_get_contents("php://input"), true);
+        
 
         // Validate inputs
         if (!isset($input['email']) || trim($input['email']) === "") {
