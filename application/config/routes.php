@@ -64,7 +64,10 @@ $route['api/users/getusers']['GET'] = 'api/Users/index_get';  // Get all users
 $route['api/users/register']['POST'] = 'api/Users/index_post';  // Register user (with auto OTP)
 $route['api/users/verify-otp']['POST'] = 'api/Users/verify_otp_post';  // Verify OTP
 $route['api/users/resend-otp']['POST'] = 'api/Users/resend_otp_post';  // Resend OTP
-$route['api/users/update_user/(:num)']['put'] = 'api/Users/update_user_put/$1';
+// $route['api/users/update_user/(:num)']['PUT'] = 'api/Users/update_user_put/$1';
+$route['api/users']['put'] = 'api/users/index';
+$route['api/users/(:num)']['get'] = 'api/users/get_user_by_id/$1';
+
 
 $route['api/startup']['GET'] = 'api/startup/index_get';  // Get all startups
 $route['api/startup']['POST'] = 'api/startup/index_post';  // Register a new startup
