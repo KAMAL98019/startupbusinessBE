@@ -71,6 +71,8 @@ $route['api/users/(:num)']['get'] = 'api/users/get_user_by_id/$1';
 
 $route['api/startup']['GET'] = 'api/startup/index_get';  // Get all startups
 $route['api/startup']['POST'] = 'api/startup/index_post';  // Register a new startup
+$route['api/startup/(:num)']['get'] = 'api/startup/get_startup_by_id/$1';
+
 
 
 $route['api/investor']['GET'] = 'api/investor/index_get';  // Get all investors

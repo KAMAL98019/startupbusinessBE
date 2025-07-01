@@ -62,5 +62,43 @@ class Startup extends RestController {
         $this->db->insert("startup_register", $data);
         $this->response(["message" => "Startup registered successfully."], 201);
     }
+
+    public function get_startup_by_id_get($id = null)
+{
+    // Validate the ID
+    if ($id === null || !is_numeric($id)) {
+        return $this->response([
+            'status' => false,
+            'message' => 'Valid startup ID is required'
+        ], 400);
+    }
+
+    // Fetch startup record by ID
+    $this->db->select("*");
+    $this->db->from("startup_register");
+    $this->db->where("id", $id);
+    $query = $this->db->get();
+    $startup = $query->row();
+
+    if ($startup) {
+        // Decode JSON fields before sending response
+        $startup->team_members = json_decode($startup->team_members, true);
+        $startup->website_links = json_decode($startup->website_links, true);
+        $startup->linkedin_links = json_decode($startup->linkedin_links, true);
+        $startup->social_links = json_decode($startup->social_links, true);
+        $startup->incubation_centers = json_decode($startup->incubation_centers, true);
+
+        return $this->response([
+            'status' => true,
+            'data' => $startup
+        ], 200);
+    } else {
+        return $this->response([
+            'status' => false,
+            'message' => 'Startup not found'
+        ], 404);
+    }
+}
+
 }
 ?>
