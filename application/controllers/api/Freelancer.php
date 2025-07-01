@@ -51,5 +51,39 @@ class Freelancer extends RestController {
         $this->db->insert("freelancer_register", $data);
         $this->response(["message" => "Freelancer registered successfully."], 201);
     }
+    public function get_freelancer_by_id_get($id = null)
+{
+    // Validate the ID
+    if ($id === null || !is_numeric($id)) {
+        return $this->response([
+            'status' => false,
+            'message' => 'Valid freelancer ID is required'
+        ], 400);
+    }
+
+    // Fetch freelancer data by ID
+    $this->db->select("*");
+    $this->db->from("freelancer_register");
+    $this->db->where("id", $id);
+    $query = $this->db->get();
+    $freelancer = $query->row();
+
+    if ($freelancer) {
+        // Decode JSON fields
+        $freelancer->service_categories = json_decode($freelancer->service_categories, true);
+        $freelancer->skills = json_decode($freelancer->skills, true);
+
+        return $this->response([
+            'status' => true,
+            'data' => $freelancer
+        ], 200);
+    } else {
+        return $this->response([
+            'status' => false,
+            'message' => 'Freelancer not found'
+        ], 404);
+    }
+}
+
 }
 ?>

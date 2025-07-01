@@ -73,32 +73,44 @@ $route['api/startup']['GET'] = 'api/startup/index_get';  // Get all startups
 $route['api/startup']['POST'] = 'api/startup/index_post';  // Register a new startup
 $route['api/startup/(:num)']['get'] = 'api/startup/get_startup_by_id/$1';
 
-
-
 $route['api/investor']['GET'] = 'api/investor/index_get';  // Get all investors
 $route['api/investor']['POST'] = 'api/investor/index_post';  // Register a new investor
+$route['api/investor/(:num)']['get'] = 'api/investor/get_investor_by_id/$1';
+
 
 $route['api/student']['GET'] = 'api/student/index_get';  // Get all students
 $route['api/student']['POST'] = 'api/student/index_post';  // Register a new student
+$route['api/student/(:num)']['get'] = 'api/student/get_student_by_id/$1';
+
 
 
 $route['api/freelancer']['GET'] = 'api/freelancer/index_get';
 $route['api/freelancer']['POST'] = 'api/freelancer/index_post';
+$route['api/freelancer/(:num)']['get'] = 'api/freelancer/get_freelancer_by_id/$1';
+
 
 
 $route['api/mentor']['GET'] = 'api/mentor/index_get';
 $route['api/mentor']['POST'] = 'api/mentor/index_post';
+$route['api/mentor/(:num)']['get'] = 'api/mentor/get_mentor_by_id/$1';
+
 
 
 $route['api/hr']['GET'] = 'api/hr/index_get';
 $route['api/hr']['POST'] = 'api/hr/index_post';
+$route['api/hr/(:num)']['get'] = 'api/hr/get_hr_by_id/$1';
+
 
 
 $route['api/incubation']['GET'] = 'api/incubation/index_get';
 $route['api/incubation']['POST'] = 'api/incubation/index_post';
+$route['api/incubation/(:num)']['get'] = 'api/incubation/get_incubation_by_id/$1';
+
 
 $route['api/legal']['GET'] = 'api/legal/index_get';
 $route['api/legal']['POST'] = 'api/legal/index_post';
+$route['api/legal/(:num)']['get'] = 'api/legal/get_legal_by_id/$1';
+
 
 $route['api/auth/forgot_password']['post'] = 'api/auth/forgot_password';
 $route['api/auth/verify_otp']['post']      = 'api/auth/verify_otp';

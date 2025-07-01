@@ -48,5 +48,38 @@ class Mentor extends RestController {
         $this->db->insert("mentor_register", $data);
         $this->response(["message" => "Mentor registered successfully."], 201);
     }
+    public function get_mentor_by_id_get($id = null)
+{
+    // Validate ID
+    if ($id === null || !is_numeric($id)) {
+        return $this->response([
+            'status' => false,
+            'message' => 'Valid mentor ID is required'
+        ], 400);
+    }
+
+    // Fetch mentor by ID
+    $this->db->select("*");
+    $this->db->from("mentor_register");
+    $this->db->where("id", $id);
+    $query = $this->db->get();
+    $mentor = $query->row();
+
+    if ($mentor) {
+        // Decode JSON fields if present
+        $mentor->additional_links = json_decode($mentor->additional_links, true);
+
+        return $this->response([
+            'status' => true,
+            'data' => $mentor
+        ], 200);
+    } else {
+        return $this->response([
+            'status' => false,
+            'message' => 'Mentor not found'
+        ], 404);
+    }
+}
+
 }
 ?>

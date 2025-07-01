@@ -47,4 +47,39 @@ class Legal extends RestController {
         $this->db->insert("legal_register", $data);
         $this->response(["message" => "Legal expert registered successfully."], 201);
     }
+
+    public function get_legal_by_id_get($id = null)
+{
+    // Validate the ID
+    if ($id === null || !is_numeric($id)) {
+        return $this->response([
+            'status' => false,
+            'message' => 'Valid legal expert ID is required'
+        ], 400);
+    }
+
+    // Fetch data by ID
+    $this->db->select("*");
+    $this->db->from("legal_register");
+    $this->db->where("id", $id);
+    $query = $this->db->get();
+    $legal = $query->row();
+
+    if ($legal) {
+        // Decode JSON fields
+        $legal->url_links = json_decode($legal->url_links, true);
+
+        return $this->response([
+            'status' => true,
+            'data' => $legal
+        ], 200);
+    } else {
+        return $this->response([
+            'status' => false,
+            'message' => 'Legal expert not found'
+        ], 404);
+    }
 }
+
+}
+?>

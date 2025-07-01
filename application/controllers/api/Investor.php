@@ -55,5 +55,40 @@ class Investor extends RestController {
         $this->db->insert("investor_register", $data);
         $this->response(["message" => "Investor registered successfully."], 201);
     }
+
+    public function get_investor_by_id_get($id = null)
+{
+    // Validate the ID
+    if ($id === null || !is_numeric($id)) {
+        return $this->response([
+            'status' => false,
+            'message' => 'Valid investor ID is required'
+        ], 400);
+    }
+
+    // Fetch investor record by ID
+    $this->db->select("*");
+    $this->db->from("investor_register");
+    $this->db->where("id", $id);
+    $query = $this->db->get();
+    $investor = $query->row();
+
+    if ($investor) {
+        // Decode JSON fields before responding
+        $investor->preferred_industry = json_decode($investor->preferred_industry, true);
+        $investor->social_links = json_decode($investor->social_links, true);
+
+        return $this->response([
+            'status' => true,
+            'data' => $investor
+        ], 200);
+    } else {
+        return $this->response([
+            'status' => false,
+            'message' => 'Investor not found'
+        ], 404);
+    }
+}
+
 }
 ?>

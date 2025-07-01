@@ -47,5 +47,40 @@ class Student extends RestController {
         $this->db->insert("student_register", $data);
         $this->response(["message" => "Student registered successfully."], 201);
     }
+
+    public function get_student_by_id_get($id = null)
+{
+    // Validate ID
+    if ($id === null || !is_numeric($id)) {
+        return $this->response([
+            'status' => false,
+            'message' => 'Valid student ID is required'
+        ], 400);
+    }
+
+    // Fetch student by ID
+    $this->db->select("*");
+    $this->db->from("student_register");
+    $this->db->where("id", $id);
+    $query = $this->db->get();
+    $student = $query->row();
+
+    if ($student) {
+        // Decode JSON fields
+        $student->skills = json_decode($student->skills, true);
+        $student->professional_profiles = json_decode($student->professional_profiles, true);
+
+        return $this->response([
+            'status' => true,
+            'data' => $student
+        ], 200);
+    } else {
+        return $this->response([
+            'status' => false,
+            'message' => 'Student not found'
+        ], 404);
+    }
+}
+
 }
 ?>

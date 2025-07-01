@@ -42,4 +42,42 @@ class Incubation extends RestController {
         $this->db->insert("incubation_register", $data);
         $this->response(["message" => "Incubation center registered successfully."], 201);
     }
+
+    public function get_incubation_by_id_get($id = null)
+{
+    // Validate ID
+    if ($id === null || !is_numeric($id)) {
+        return $this->response([
+            'status' => false,
+            'message' => 'Valid incubation center ID is required'
+        ], 400);
+    }
+
+    // Fetch incubation center by ID
+    $this->db->select("*");
+    $this->db->from("incubation_register");
+    $this->db->where("id", $id);
+    $query = $this->db->get();
+    $incubation = $query->row();
+
+    if ($incubation) {
+        // Decode JSON fields
+        $incubation->social_media_links = json_decode($incubation->social_media_links, true);
+        $incubation->incubation_benefits = json_decode($incubation->incubation_benefits, true);
+        $incubation->eligibility_criteria = json_decode($incubation->eligibility_criteria, true);
+
+        return $this->response([
+            'status' => true,
+            'data' => $incubation
+        ], 200);
+    } else {
+        return $this->response([
+            'status' => false,
+            'message' => 'Incubation center not found'
+        ], 404);
+    }
 }
+
+}
+
+?>

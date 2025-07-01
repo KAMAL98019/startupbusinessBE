@@ -48,5 +48,38 @@ class Hr extends RestController {
         $this->db->insert("hr_register", $data);
         $this->response(["message" => "HR registered successfully."], 201);
     }
+    public function get_hr_by_id_get($id = null)
+{
+    // Validate ID
+    if ($id === null || !is_numeric($id)) {
+        return $this->response([
+            'status' => false,
+            'message' => 'Valid HR ID is required'
+        ], 400);
+    }
+
+    // Fetch HR data by ID
+    $this->db->select("*");
+    $this->db->from("hr_register");
+    $this->db->where("id", $id);
+    $query = $this->db->get();
+    $hr = $query->row();
+
+    if ($hr) {
+        // Decode JSON fields
+        $hr->skills = json_decode($hr->skills, true);
+
+        return $this->response([
+            'status' => true,
+            'data' => $hr
+        ], 200);
+    } else {
+        return $this->response([
+            'status' => false,
+            'message' => 'HR record not found'
+        ], 404);
+    }
+}
+
 }
 ?>
