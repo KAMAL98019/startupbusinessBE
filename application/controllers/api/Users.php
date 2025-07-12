@@ -59,7 +59,7 @@ class Users extends RestController
     $updatable_fields = ['username', 'email', 'is_verified', 'role_id', 'role_name'];
     $data_to_update = [];
 
-    foreach ($updatable_fields as $field) { 
+    foreach ($updatable_fields as $field) {
         if (isset($input[$field])) {
             $data_to_update[$field] = $input[$field];
         }

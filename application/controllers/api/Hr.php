@@ -46,7 +46,7 @@ class Hr extends RestController {
         ];
 
         $this->db->insert("hr_register", $data);
-        $this->response(["message" => "HR registered successfully."], 201);
+        $this->response(["success" => true, "message" => "HR registered successfully."], 201);
     }
     public function get_hr_by_id_get($id = null)
 {

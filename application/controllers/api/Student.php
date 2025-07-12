@@ -45,7 +45,7 @@ class Student extends RestController {
         ];
 
         $this->db->insert("student_register", $data);
-        $this->response(["message" => "Student registered successfully."], 201);
+        $this->response(["success" => true, "message" => "Student registered successfully."], 201);
     }
 
     public function get_student_by_id_get($id = null)

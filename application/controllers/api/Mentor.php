@@ -70,7 +70,7 @@ class Mentor extends RestController {
 
         // Insert data into the DB
         if ($this->db->insert("mentor_register", $data)) {
-            $this->response(["message" => "Mentor registered successfully."], 201);
+            $this->response(["success"=>true,"message" => "Mentor registered successfully."], 201);
         } else {
             $error = $this->db->error();
             $this->response([
@@ -108,7 +108,7 @@ class Mentor extends RestController {
                 'status' => false,
                 'message' => 'Mentor not found'
             ], 404);
-        }
-    }
+}
+}
 }
 ?>

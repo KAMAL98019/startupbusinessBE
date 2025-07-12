@@ -67,7 +67,7 @@ class Startup extends RestController {
 
         // ✅ Insert and check status
         if ($this->db->insert("startup_register", $data)) {
-            $this->response(["message" => "Startup registered successfully."], 201);
+$this->response(["success" => true, "message" => "Startup registered successfully."], 201);
         } else {
             $error = $this->db->error();
             $this->response([
@@ -108,7 +108,7 @@ class Startup extends RestController {
                 'status' => false,
                 'message' => 'Startup not found'
             ], 404);
-        }
     }
+}
 }
 ?>

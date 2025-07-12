@@ -49,7 +49,7 @@ class Freelancer extends RestController {
         ];
 
         $this->db->insert("freelancer_register", $data);
-        $this->response(["message" => "Freelancer registered successfully."], 201);
+        $this->response(["success"=>true, "message" => "Freelancer registered successfully."], 201);
     }
     public function get_freelancer_by_id_get($id = null)
 {

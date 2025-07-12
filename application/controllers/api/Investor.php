@@ -53,7 +53,7 @@ class Investor extends RestController {
         ];
 
         $this->db->insert("investor_register", $data);
-        $this->response(["message" => "Investor registered successfully."], 201);
+        $this->response([ "success" => true, "message" => "Investor registered successfully."], 201);
     }
 
     public function get_investor_by_id_get($id = null)
