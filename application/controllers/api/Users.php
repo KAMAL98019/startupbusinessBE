@@ -166,6 +166,36 @@ class Users extends RestController
         }
     }
 
+    public function accept_user_put()
+{
+    $input = json_decode(file_get_contents("php://input"), true);
+
+    if (!isset($input['id'])) {
+        return $this->response(['status' => false, 'message' => 'User ID is required'], 400);
+    }
+
+    $id = $input['id'];
+
+    // Optionally: You can also validate whether the user exists
+    $this->db->where('id', $id);
+    $exists = $this->db->get('users')->row();
+
+    if (!$exists) {
+        return $this->response(['status' => false, 'message' => 'User not found'], 404);
+    }
+
+    // Update is_accepted to 1
+    $this->db->where('id', $id);
+    $updated = $this->db->update('users', ['is_accepted' => 1]);
+
+    if ($updated) {
+        return $this->response(['status' => true, 'message' => 'User accepted successfully'], 200);
+    } else {
+        return $this->response(['status' => false, 'message' => 'Failed to update user'], 500);
+    }
+}
+
+
 
     // 📌 Verify OTP
     public function verify_otp_post()
@@ -204,102 +234,6 @@ class Users extends RestController
 
         $this->response(["success" => true, "message" => "OTP verified successfully. Account activated."], 200);
     }
-
-    // public function login_post()
-    // {
-    //     $input = json_decode(file_get_contents("php://input"), true);
-
-    //     // Validate inputs
-    //     if (!isset($input['email']) || trim($input['email']) === "") {
-    //         $this->response(["success" => false, "message" => "Email is required"], 400);
-    //         return;
-    //     } elseif (!isset($input['password']) || trim($input['password']) === "") {
-    //         $this->response(["success" => false, "message" => "Password is required"], 400);
-    //         return;
-    //     }
-
-    //     // Fetch user by email
-    //     $query = $this->db->get_where("users", ["email" => $input['email']]);
-    //     if ($query->num_rows() === 0) {
-    //         $this->response(["success" => false, "message" => "Invalid email or password"], 401);
-    //         return;
-    //     }
-
-    //     $user = $query->row_array();
-
-    //     // Check if user is verified
-    //     if ((int)$user['is_verified'] !== 1) {
-    //         $this->response(["success" => false, "message" => "Account not verified. Please verify your OTP."], 403);
-    //         return;
-    //     }
-
-    //     // Verify password
-    //     if (!password_verify($input['password'], $user['password'])) {
-    //         $this->response(["success" => false, "message" => "Invalid email or password"], 401);
-    //         return;
-    //     }
-
-    //     // Login success
-    //     $this->response([
-    //         "success" => true,
-    //         "message" => "Login successful",
-    //         "user" => [
-    //             "id" => $user['id'],
-    //             "username" => $user['username'],
-    //             "email" => $user['email']
-    //         ]
-    //     ], 200);
-    // }
-
-
-    // 📌 Login using username/email and password (only if verified)
-    // public function login_post() {
-    //     $input = json_decode(file_get_contents("php://input"), true);
-
-    //     if (!isset($input['identifier']) || !isset($input['password'])) {
-    //         $this->response(["success"=>false,"message" => "Username/Email and Password are required"], 400);
-    //         return;
-    //     }
-
-    //     $identifier = $input['identifier'];
-    //     $password = $input['password'];
-
-    //     // Search by username or email
-    //     $this->db->where('username', $identifier);
-    //     $this->db->or_where('email', $identifier);
-    //     $query = $this->db->get('users');
-
-    //     if ($query->num_rows() === 0) {
-    //         $this->response(["success"=>false,"message" => "User not found"], 404);
-    //         return;
-    //     }
-
-    //     $user = $query->row();
-
-    //     // Verify password
-    //     if (!password_verify($password, $user->password)) {
-    //         $this->response(["success"=>false,"message" => "Incorrect password"], 401);
-    //         return;
-    //     }
-
-    //     // Check if verified
-    //     if ((int)$user->is_verified !== 1) {
-    //         $this->response(["success"=>false,"message" => "Account not verified. Please verify OTP first."], 403);
-    //         return;
-    //     }
-
-    //     // Successful login
-    //     $this->response(["success"=>true,
-    //         "message" => "Login successful",
-    //         "user" => [
-    //             "id" => $user->id,
-    //             "username" => $user->username,
-    //             "email" => $user->email
-    //         ]
-    //     ], 200);
-    // }
-
-
 
     public function resend_otp_post()
     {
@@ -424,64 +358,4 @@ class Users extends RestController
             $this->response(["success" => false, "message" => "Failed to send OTP email."], 500);
         }
     }
-
-
-    // public function update_user_put($id)
-    // {
-    //     log_message('error', "Update PUT Request received for ID: $id");
-    //     log_message('error', "Raw Input: " . file_get_contents("php://input"));
-    //     $input = json_decode(file_get_contents("php://input"), true);
-
-    //     // Validate ID
-    //     if (!$id || !is_numeric($id)) {
-    //         $this->response(["success" => false, "message" => "Invalid user ID"], 400);
-    //         return;
-    //     }
-
-    //     // Check user exists
-    //     $user = $this->db->get_where("users", ["id" => $id])->row();
-    //     if (!$user) {
-    //         $this->response(["success" => false, "message" => "User not found"], 404);
-    //         return;
-    //     }
-
-    //     // Allowed fields
-    //     $allowed_fields = ['username', 'email', 'password', 'is_verified', 'role_id', 'role_name'];
-    //     $update_data = [];
-
-    //     // Loop through all received keys and update if allowed
-    //     foreach ($input as $key => $value) {
-    //         if (in_array($key, $allowed_fields)) {
-    //             if ($key === 'password') {
-    //                 $value = password_hash($value, PASSWORD_BCRYPT);
-    //             } elseif ($key === 'is_verified' || $key === 'role_id') {
-    //                 $value = (int) $value;
-    //             } else {
-    //                 $value = trim($value);
-    //             }
-
-    //             $update_data[$key] = $value;
-    //         } else {
-    //             $this->response(["success" => false, "message" => "Invalid field: $key"], 400);
-    //             return;
-    //         }
-    //     }
-
-    //     if (empty($update_data)) {
-    //         $this->response(["success" => false, "message" => "No valid data to update"], 400);
-    //         return;
-    //     }
-
-    //     // Update DB
-    //     $this->db->where("id", $id);
-    //     if ($this->db->update("users", $update_data)) {
-    //         $this->response(["success" => true, "message" => "User updated successfully"], 200);
-    //     } else {
-    //         $this->response(["success" => false, "message" => "Failed to update user"], 500);
-    //     }
-    // }
-
-
-
-
 }

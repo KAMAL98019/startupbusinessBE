@@ -67,6 +67,9 @@ $route['api/users/resend-otp']['POST'] = 'api/Users/resend_otp_post';  // Resend
 // $route['api/users/update_user/(:num)']['PUT'] = 'api/Users/update_user_put/$1';
 $route['api/users']['put'] = 'api/users/index';
 $route['api/users/(:num)']['get'] = 'api/users/get_user_by_id/$1';
+// PUT request for accepting a user
+$route['api/users/accept_user']['put'] = 'api/users/accept_user';
+
 
 
 $route['api/startup']['GET'] = 'api/startup/index_get';  // Get all startups
