@@ -132,3 +132,10 @@ $route['profile_pic/delete/(:num)'] = 'profile_pic/delete/$1';
 $route['profile_pic/user/(:num)']['get'] = 'profile_pic/user/$1';
 $route['profile_pic/fetch']['get'] = 'profile_pic/fetch';
 
+// Profile API DASH Routes
+$route['profileapidash/create_profile']['post']      = 'ProfileApiDash/create_profile';
+$route['profileapidash/get_profile']['get']          = 'ProfileApiDash/get_profile';
+$route['profileapidash/get_profile/(:num)']['get']   = 'ProfileApiDash/get_profile/$1';
+$route['profileapidash/update_profile/(:num)']['put'] = 'ProfileApiDash/update_profile/$1';
+
+
