@@ -67,9 +67,7 @@ $route['api/users/resend-otp']['POST'] = 'api/Users/resend_otp_post';  // Resend
 // $route['api/users/update_user/(:num)']['PUT'] = 'api/Users/update_user_put/$1';
 $route['api/users']['put'] = 'api/users/index';
 $route['api/users/(:num)']['get'] = 'api/users/get_user_by_id/$1';
-// PUT request for accepting a user
 $route['api/users/accept_user']['put'] = 'api/users/accept_user';
-
 
 
 $route['api/startup']['GET'] = 'api/startup/index_get';  // Get all startups
@@ -127,10 +125,11 @@ $route['profile/(:num)']['put'] = 'ProfileApi/update_profile/$1';
 
 
 $route['profile_pic/insert'] = 'profile_pic/insert';
-$route['profile_pic/update/(:num)'] = 'profile_pic/update/$1';
+$route['profile_pic/update/(:num)']['post'] = 'Profile_pic/update/$1';
 $route['profile_pic/delete/(:num)'] = 'profile_pic/delete/$1';
 $route['profile_pic/user/(:num)']['get'] = 'profile_pic/user/$1';
 $route['profile_pic/fetch']['get'] = 'profile_pic/fetch';
+
 
 // Profile API DASH Routes
 $route['profileapidash/create_profile']['post']      = 'ProfileApiDash/create_profile';

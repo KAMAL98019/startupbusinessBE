@@ -54,19 +54,47 @@ class Profile_pic extends RestController {
     }
 
     // UPDATE
-    public function update_put($id) {
-        $data = [
-            'user_id' => $this->put('user_id'),
-            'profile' => $this->put('profile')
-        ];
+public function update_post($id) {
+    $user_id = $this->post('user_id');
 
-        $update = $this->Profile_pic_model->update_profile_pic($id, $data);
-        if ($update) {
-            $this->response(['status' => true, 'message' => 'Profile picture updated.'], 200);
-        } else {
-            $this->response(['status' => false, 'message' => 'Update failed.'], 400);
+    // File upload config
+    $config['upload_path']   = './uploads/profile/';
+    $config['allowed_types'] = 'jpg|jpeg|png|gif';
+    $config['max_size']      = 2048;
+    $this->load->library('upload', $config);
+
+    $file_name = null;
+    if (!empty($_FILES['profile']['name'])) {
+        if (!$this->upload->do_upload('profile')) {
+            $error = strip_tags($this->upload->display_errors());
+            $this->response([
+                'status' => false,
+                'message' => 'Upload failed: ' . $error
+            ], 400);
+            return;
         }
+
+        $upload_data = $this->upload->data();
+        $file_name = $upload_data['file_name'];
     }
+
+    $data = ['user_id' => $user_id];
+    if ($file_name) {
+        $data['profile'] = $file_name;
+    }
+
+    $update = $this->Profile_pic_model->update_profile_pic($id, $data);
+    if ($update) {
+        $this->response([
+            'status' => true,
+            'message' => 'Profile updated successfully.',
+            'image_url' => $file_name ? base_url('uploads/profile/' . $file_name) : null
+        ], 200);
+    } else {
+        $this->response(['status' => false, 'message' => 'Update failed.'], 400);
+    }
+}
+
 
     // DELETE
     public function delete_delete($id) {
