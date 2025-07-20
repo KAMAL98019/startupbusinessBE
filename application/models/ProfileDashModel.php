@@ -11,7 +11,7 @@ class ProfileDashModel extends CI_Model {
 
     public function get_profiles($id = null) {
         if ($id) {
-            $query = $this->db->get_where($this->table, ['id' => $id]);
+            $query = $this->db->get_where($this->table, ['user_id' => $id]);
             return $query->row_array();
         } else {
             $query = $this->db->get($this->table);
