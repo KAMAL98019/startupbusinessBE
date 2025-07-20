@@ -9,13 +9,13 @@ class Profile_model extends CI_Model {
 
     public function get_profiles($id = null) {
         if ($id) {
-            return $this->db->get_where($this->table, ['id' => $id])->row_array();
+            return $this->db->get_where($this->table, ['user_id' => $id])->row_array();
         }
         return $this->db->get($this->table)->result_array();
     }
 
     public function update_profile($id, $data) {
-        $this->db->where('id', $id);
+        $this->db->where('user_id', $id);
         return $this->db->update($this->table, $data);
     }
 }

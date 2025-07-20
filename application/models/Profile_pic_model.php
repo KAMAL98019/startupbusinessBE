@@ -6,12 +6,12 @@ class Profile_pic_model extends CI_Model {
     }
 
     public function update_profile_pic($id, $data) {
-        $this->db->where('id', $id);
+        $this->db->where('user_id', $id);
         return $this->db->update('profile_pic', $data);
     }
 
     public function delete_profile_pic($id) {
-        $this->db->where('id', $id);
+        $this->db->where('user_id', $id);
         return $this->db->delete('profile_pic');
     }
     public function get_all_profiles() {

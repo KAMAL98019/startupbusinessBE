@@ -20,7 +20,7 @@ class ProfileDashModel extends CI_Model {
     }
 
     public function update_profile($id, $data) {
-        $this->db->where('id', $id);
+        $this->db->where('user_id', $id);
         return $this->db->update($this->table, $data);
     }
 }
