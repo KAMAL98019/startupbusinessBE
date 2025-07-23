@@ -60,14 +60,14 @@ $route['user-types/(:num)']['DELETE'] = 'api/UserTypes/index_delete/$1';
 
 
 $route['api/login']['POST'] = 'api/login/login';
-$route['api/users/getusers']['GET'] = 'api/Users/index_get';  // Get all users
-$route['api/users/register']['POST'] = 'api/Users/index_post';  // Register user (with auto OTP)
-$route['api/users/verify-otp']['POST'] = 'api/Users/verify_otp_post';  // Verify OTP
-$route['api/users/resend-otp']['POST'] = 'api/Users/resend_otp_post';  // Resend OTP
+$route['api/users/getusers']['GET'] = 'api/users/index_get';  // Get all users
+$route['api/users/register']['POST'] = 'api/users/index_post';  // Register user (with auto OTP)
+$route['api/users/verify-otp']['POST'] = 'api/users/verify_otp_post';  // Verify OTP
+$route['api/users/resend-otp']['POST'] = 'api/users/resend_otp_post';  // Resend OTP
 // $route['api/users/update_user/(:num)']['PUT'] = 'api/Users/update_user_put/$1';
-$route['api/users']['put'] = 'api/users/index';
-$route['api/users/(:num)']['get'] = 'api/users/get_user_by_id/$1';
-$route['api/users/accept_user']['put'] = 'api/users/accept_user';
+$route['api/users']['put'] = 'api/users/index_put';
+$route['api/users/(:num)']['get'] = 'api/users/get_user_by_id_get/$1';
+$route['api/users/accept_user']['put'] = 'api/users/accept_user_put';
 
 
 $route['api/startup']['GET'] = 'api/startup/index_get';  // Get all startups
