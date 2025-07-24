@@ -277,4 +277,73 @@ class Users extends RestController
             $this->response(["success" => false, "message" => "Failed to send OTP email."], 500);
         }
     }
+
+    public function get_notifications_get($id = null)
+{
+    if ($id === null || !is_numeric($id)) {
+        return $this->response(['status' => false, 'message' => 'Valid User ID is required'], 400);
+    }
+
+    $this->db->select('notification');
+    $this->db->from('users');
+    $this->db->where('id', $id);
+    $query = $this->db->get();
+    $row = $query->row();
+
+    if (!$row) {
+        return $this->response(['status' => false, 'message' => 'User not found'], 404);
+    }
+
+    $notifications = json_decode($row->notification ?? '[]', true);
+    return $this->response(['status' => true, 'notifications' => $notifications], 200);
+}
+
+
+// public function add_notification_post()
+// {
+//     $input = json_decode(file_get_contents("php://input"), true);
+
+//     if (!isset($input['id']) || !isset($input['message'])) {
+//         return $this->response(['status' => false, 'message' => 'User ID and message are required'], 400);
+//     }
+
+//     $id = $input['id'];
+//     $message = trim($input['message']);
+//     $timestamp = date("Y-m-d H:i:s");
+
+//     $user = $this->db->get_where('users', ['id' => $id])->row();
+
+//     if (!$user) {
+//         return $this->response(['status' => false, 'message' => 'User not found'], 404);
+//     }
+
+//     $notifications = json_decode($user->notification ?? '[]', true);
+//     $notifications[] = ['message' => $message, 'time' => $timestamp];
+
+//     $this->db->where('id', $id);
+//     $this->db->update('users', ['notification' => json_encode($notifications)]);
+
+//     return $this->response(['status' => true, 'message' => 'Notification added'], 200);
+// }
+
+
+public function delete_notifications_delete($id = null)
+{
+    if ($id === null || !is_numeric($id)) {
+        return $this->response(['status' => false, 'message' => 'Valid User ID is required'], 400);
+    }
+
+    $user = $this->db->get_where('users', ['id' => $id])->row();
+
+    if (!$user) {
+        return $this->response(['status' => false, 'message' => 'User not found'], 404);
+    }
+
+    $this->db->where('id', $id);
+    $this->db->update('users', ['notification' => json_encode([])]);
+
+    return $this->response(['status' => true, 'message' => 'All notifications deleted'], 200);
+}
+
+
 }

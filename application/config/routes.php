@@ -68,6 +68,9 @@ $route['api/users/resend-otp']['POST'] = 'api/users/resend_otp_post';  // Resend
 $route['api/users']['put'] = 'api/users/index_put';
 $route['api/users/(:num)']['get'] = 'api/users/get_user_by_id_get/$1';
 $route['api/users/accept_user']['put'] = 'api/users/accept_user_put';
+$route['api/users/notifications/(:num)'] = 'api/users/get_notifications/$1';
+// $route['api/users/add-notification'] = 'api/users/add_notification';
+$route['api/users/delete-notifications/(:num)'] = 'api/users/delete_notifications/$1';
 
 
 $route['api/startup']['GET'] = 'api/startup/index_get';  // Get all startups
@@ -136,5 +139,14 @@ $route['profileapidash/create_profile']['post']      = 'ProfileApiDash/create_pr
 $route['profileapidash/get_profile']['get']          = 'ProfileApiDash/get_profile';
 $route['profileapidash/get_profile/(:num)']['get']   = 'ProfileApiDash/get_profile/$1';
 $route['profileapidash/update_profile/(:num)']['put'] = 'ProfileApiDash/update_profile/$1';
+
+
+$route['postjob']['post'] = 'PostJob/add';
+$route['postjob']['GET'] = 'PostJob/all';
+$route['postjob/(:num)']['get'] = 'PostJob/job/$1';
+$route['postjob/update/(:num)']['post'] = 'PostJob/update_post/$1';
+$route['postjob/delete/(:num)']['delete'] = 'PostJob/delete_delete/$1';
+$route['postjob/approve']['POST'] = 'postjob/approve';
+
 
 
