@@ -182,3 +182,29 @@ $route['booksession/(:num)']['get'] = 'BookSession/session/$1';
 $route['booksession/update/(:num)']['put'] = 'BookSession/update/$1';
 $route['booksession/delete/(:num)']['delete'] = 'BookSession/delete/$1';
 $route['booksession/approve']['post'] = 'BookSession/approve';
+
+
+
+// Investor_Book Controller Routes
+$route['investorbook']['post'] = 'Investor_Book/add';
+$route['investorbook/all']['get'] = 'Investor_Book/all';
+$route['investorbook/(:num)']['get'] = 'Investor_Book/booking/$1';
+$route['investorbook/update/(:num)']['put'] = 'Investor_Book/update/$1';
+$route['investorbook/delete/(:num)']['delete'] = 'Investor_Book/delete/$1';
+$route['investorbook/approve']['post'] = 'Investor_Book/approve';
+
+
+$route['legalapply']['post']        = 'legalapply/add';
+$route['legalapply/all']['get']         = 'legalapply/all';
+$route['legalapply/(:num)']['get'] = 'legalapply/application/$1';
+$route['legalapply/update/(:num)']['put']       = 'legalapply/update/$1';
+$route['legalapply/delete/(:num)']['delete']    = 'legalapply/delete/$1';
+$route['legalapply/approve']['post']    = 'legalapply/approve';
+
+
+$route['incubation_book/add']['post'] = 'incubation_book/add';
+$route['incubation_book/all']['get'] = 'incubation_book/all';
+$route['incubation_book/booking/(:num)']['get'] = 'incubation_book/booking/$1';
+$route['incubation_book/update/(:num)']['put'] = 'incubation_book/update/$1';
+$route['incubation_book/delete/(:num)']['delete'] = 'incubation_book/delete/$1';
+$route['incubation_book/approve']['post'] = 'incubation_book/approve';

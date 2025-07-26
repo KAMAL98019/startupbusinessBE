@@ -16,7 +16,7 @@ class Users extends RestController
     // 📌 Get all users (excluding OTP and passwords)
     public function index_get()
     {
-        $this->db->select("id, username, email, is_verified, created_at, role_id, role_name, is_accepted, notification_enabled,notification");
+        $this->db->select("id, username, email, is_verified, created_at, role_id, role_name, is_accepted, notification_enabled,notification, student_intern, project_details, booksession, investor_book, legal_apply, incubation_book");
         $query = $this->db->get("users");
         $data = $query->result();
         $this->response($data, 200);
@@ -28,7 +28,7 @@ class Users extends RestController
             return $this->response(['status' => false, 'message' => 'Valid User ID is required'], 400);
         }
 
-        $this->db->select("id, username, email, is_verified, created_at, role_id, role_name, is_accepted ,notification_enabled, notification");
+        $this->db->select("id, username, email, is_verified, created_at, role_id, role_name, is_accepted ,notification_enabled, notification, student_intern, project_details, booksession, investor_book, legal_apply, incubation_book");
         $this->db->from("users");
         $this->db->where("id", $id);
         $query = $this->db->get();
