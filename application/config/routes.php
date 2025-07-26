@@ -158,4 +158,19 @@ $route['project/delete/(:num)']['delete'] = 'PostProject/delete/$1';
 $route['project/approve']['post'] = 'PostProject/approve';
 
 
+$route['projectintern/add']['post'] = 'PostIntern/add';
+$route['projectintern/all']['get'] = 'PostIntern/all';
+$route['projectintern/(:num)']['get'] = 'PostIntern/intern/$1';
+$route['projectintern/update/(:num)']['put'] = 'PostIntern/update/$1';
+$route['projectintern/delete/(:num)']['delete'] = 'PostIntern/delete/$1';
+$route['projectintern/approve']['post'] = 'PostIntern/approve';
 
+
+
+// App Detail Routes
+$route['appdetail']['POST'] = 'App_detail/add';                    // Add application
+$route['appdetail']['GET'] = 'App_detail/all';                     // Get all applications
+$route['appdetail/(:num)']['GET'] = 'App_detail/application/$1';   // Get single application by ID
+$route['appdetail/(:num)']['PUT'] = 'App_detail/update/$1';        // Update application by ID
+$route['appdetail/(:num)']['DELETE'] = 'App_detail/delete/$1';     // Delete application by ID
+$route['appdetail/approve']['POST'] = 'App_detail/approve';        // Approve and notify user
