@@ -174,3 +174,11 @@ $route['appdetail/(:num)']['GET'] = 'App_detail/application/$1';   // Get single
 $route['appdetail/(:num)']['PUT'] = 'App_detail/update/$1';        // Update application by ID
 $route['appdetail/(:num)']['DELETE'] = 'App_detail/delete/$1';     // Delete application by ID
 $route['appdetail/approve']['POST'] = 'App_detail/approve';        // Approve and notify user
+
+
+$route['booksession']['post'] = 'BookSession/add';
+$route['booksession/all']['get'] = 'BookSession/all';
+$route['booksession/(:num)']['get'] = 'BookSession/session/$1';
+$route['booksession/update/(:num)']['put'] = 'BookSession/update/$1';
+$route['booksession/delete/(:num)']['delete'] = 'BookSession/delete/$1';
+$route['booksession/approve']['post'] = 'BookSession/approve';
