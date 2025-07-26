@@ -149,4 +149,13 @@ $route['postjob/delete/(:num)']['delete'] = 'PostJob/delete_delete/$1';
 $route['postjob/approve']['POST'] = 'postjob/approve';
 
 
+// --- PostProject Routes ---
+$route['project/add']['post'] = 'PostProject/add';
+$route['project/all']['get'] = 'PostProject/all';
+$route['project/(:num)']['get'] = 'PostProject/project/$1';
+$route['project/update/(:num)']['put'] = 'PostProject/update/$1';
+$route['project/delete/(:num)']['delete'] = 'PostProject/delete/$1';
+$route['project/approve']['post'] = 'PostProject/approve';
+
+
 

@@ -119,16 +119,16 @@ public function update_put($id) {
             return $this->response(['status' => false, 'message' => 'Job ID is required'], 400);
         }
 
-        $id = $input['id'];
+        $id = $input['user_id'];
 
         // Check if job exists
-        $job = $this->db->get_where('post_job', ['id' => $id])->row();
+        $job = $this->db->get_where('post_job', ['user_id' => $id])->row();
         if (!$job) {
             return $this->response(['status' => false, 'message' => 'Job not found'], 404);
         }
 
         // Approve the job
-        $this->db->where('id', $id);
+        $this->db->where('user_id', $id);
         $this->db->update('post_job', ['is_approved' => 1]);
 
         // Get the user
