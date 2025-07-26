@@ -20,33 +20,57 @@ class Student extends RestController {
 
     // 📌 Register a new student
     public function index_post() {
-        $input = json_decode(file_get_contents("php://input"), true);
+    $input = json_decode(file_get_contents("php://input"), true);
 
-        if (!isset($input['full_name']) || !isset($input['email']) || !isset($input['phone_number']) || 
-            !isset($input['skills']) || !isset($input['professional_profiles']) || 
-            !isset($input['work_mode']) || !isset($input['compensation']) || 
-            !isset($input['availability']) || !isset($input['agree_terms'])) {
-            $this->response(["error" => "All required fields must be provided"], 400);
-            return;
-        }
-
-        // Insert student data
-        $data = [
-            "full_name" => $input['full_name'],
-            "email" => $input['email'],
-            "phone_number" => $input['phone_number'],
-            "skills" => json_encode($input['skills']), // JSON Encoding for multiple skills
-            "professional_profiles" => json_encode($input['professional_profiles']), // JSON Encoding for multiple profiles
-            "work_mode" => $input['work_mode'],
-            "compensation" => $input['compensation'],
-            "availability" => $input['availability'],
-            "resume" => isset($input['resume']) ? $input['resume'] : NULL,
-            "agree_terms" => (bool) $input['agree_terms']
-        ];
-
-        $this->db->insert("student_register", $data);
-        $this->response(["success" => true, "message" => "Student registered successfully."], 201);
+    // Validate required fields
+    if (!isset($input['full_name']) || !isset($input['email']) || !isset($input['phone_number']) || 
+        !isset($input['skills']) || !isset($input['professional_profiles']) || 
+        !isset($input['work_mode']) || !isset($input['compensation']) || 
+        !isset($input['availability']) || !isset($input['agree_terms'])) {
+        $this->response(["error" => "All required fields must be provided"], 400);
+        return;
     }
+
+    // Prepare data
+    $data = [
+        "full_name" => $input['full_name'],
+        "email" => $input['email'],
+        "phone_number" => $input['phone_number'],
+        "skills" => json_encode($input['skills']),
+        "professional_profiles" => json_encode($input['professional_profiles']),
+        "work_mode" => $input['work_mode'],
+        "compensation" => $input['compensation'],
+        "availability" => $input['availability'],
+        "resume" => isset($input['resume']) ? $input['resume'] : NULL,
+        "agree_terms" => (bool) $input['agree_terms']
+    ];
+
+    // Insert data
+    $this->db->insert("student_register", $data);
+    $insert_id = $this->db->insert_id();
+
+    // Prepare response
+    $response = [
+        "success" => true,
+        "message" => "Student registered successfully.",
+        "data" => [
+            "id" => $insert_id,
+            "full_name" => $data['full_name'],
+            "email" => $data['email'],
+            "phone_number" => $data['phone_number'],
+            "skills" => json_decode($data['skills']),
+            "professional_profiles" => json_decode($data['professional_profiles']),
+            "work_mode" => $data['work_mode'],
+            "compensation" => $data['compensation'],
+            "availability" => $data['availability'],
+            "resume" => $data['resume'],
+            "agree_terms" => $data['agree_terms']
+        ]
+    ];
+
+    $this->response($response, 201);
+}
+
 
     public function get_student_by_id_get($id = null)
 {
